@@ -1,4 +1,5 @@
-﻿type Peano = Zero|S of Peano
+﻿//Ожидаемое время выполнения - 1 час, реальное - 2 часа
+type Peano = Zero|S of Peano
 
 let suc(p:Peano) = S p 
 
@@ -17,8 +18,8 @@ let rec plus a b =
 let rec minus a b =
   match a, b with
   |Zero, Zero -> Zero
+  |Zero, S b -> Zero
   |S a, Zero -> S a
-  |Zero, S b -> S b
   |S a, S b -> minus a b
 
 let rec toInt a =
@@ -50,7 +51,7 @@ let main args =
     printf "%A\n" (minus1 (S(S(S(S(Zero))))))
     printf "%A\n" (plus (S(S(Zero))) (S(S(S(Zero)))))
     printf "%A\n" (minus (S(S(S(Zero)))) (S(S(S(Zero)))))
-    printf "%A\n" (printPeano (S(S(S(S(S(S(S(Zero)))))))))
+    printPeano (S(S(S(S(S(S(S(Zero))))))))
     printf "%A\n" (multi (S(S(S(Zero)))) (S(S(Zero))))
     printf "%A\n" (exp (S(S(Zero))) (S(S(S(Zero)))))
     0 
