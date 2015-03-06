@@ -1,8 +1,8 @@
 ﻿ //Тип List.iter: val it : (('a -> unit) -> 'a list -> unit) 
 
-let reverse l = List.fold (fun x list -> list::x) [] l
+let reverse l = List.fold (fun list x -> x::list) [] l
 
-let filter f l = List.fold (fun list x -> if f x = true then list @ [x] else list) [] l
+let filter f l = List.foldBack (fun x list -> if f x = true then x::list else list) l []
 
 let map f l = List.fold (fun list x -> list @[f x]) [] l
 
