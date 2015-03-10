@@ -2,9 +2,9 @@
 
 let reverse l = List.fold (fun list x -> x::list) [] l
 
-let filter f l = List.foldBack (fun x list -> if f x = true then x::list else list) l []
+let filter f l = List.foldBack (fun x list -> if f x then x::list else list) l []
 
-let map f l = List.fold (fun list x -> list @[f x]) [] l
+let map f l = List.foldBack (fun x list -> f x :: list) l [] 
 
 let horner x0 l = List.fold(fun sum a -> x0*sum + a) 0 (reverse l)
 
