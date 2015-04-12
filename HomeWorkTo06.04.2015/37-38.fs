@@ -30,9 +30,9 @@ type ListStack<'A> () =
           Some head
   end
 
-let postfix () =
-  use instream = new StreamReader("input.txt")
-  use outstream = new StreamWriter("output.txt")
+let postfix (input:string) (output:string) =
+  use instream = new StreamReader(input)
+  use outstream = new StreamWriter(output)
   let expr = instream.ReadToEnd()
   
   let mutable tokens = []
@@ -93,13 +93,16 @@ let postfix () =
                       elif (x.Length > 0)&&(System.Char.IsDigit(x.[0])) then outstream.WriteLine(x)
                       elif op x then 
                         if stack.isEmpty then ignore(stack.push(x))
-                        elif prior x <= (prior stack.top.Value) then 
+                        elif (prior x <= (prior stack.top.Value))&&(prior x < 3) then 
                           outstream.WriteLine(stack.top.Value)
                           ignore(stack.pop)
+                          stack.push x
+                        elif prior x = 3 then
                           stack.push x
                         else stack.push x
                f y                                                          
   f tokens
+  
 
 let (^) a b =
     let mutable temp = 1
@@ -107,9 +110,9 @@ let (^) a b =
         temp <- temp*a
     temp
 
-let stackmachine () =
-   use instream = new StreamReader("output.txt")
-   use outstream = new StreamWriter("output2.txt")
+let stackmachine (input:string) (output:string) =
+   use instream = new StreamReader(input)
+   use outstream = new StreamWriter(output)
 
    let stack = new ListStack<int>():> Stack<int>
    while not instream.EndOfStream do
@@ -131,20 +134,26 @@ let stackmachine () =
 
    outstream.WriteLine(stack.pop.Value)
 
-let write1 (str : string) =
-    use stream = new StreamWriter("input.txt")
-    stream.WriteLine(str)
-
-let read1 =
-    use stream = new StreamReader("output.txt")
+let read (input:string) =
+    use stream = new StreamReader(input)
     stream.ReadToEnd()
 
-let write2 (str : string) = 
-    use stream = new StreamWriter("output.txt")
+let write (output:string) (str:string) = 
+    use stream = new StreamWriter(output)
     stream.WriteLine(str)
-let read2 =
-    use stream = new StreamReader("output2.txt")
-    stream.ReadToEnd()
+
+[<TestCase ("(-2) * 5", Result = "-2\r\n5\r\n*\r\n")>]
+[<TestCase ("1+999999", Result = "1\r\n999999\r\n+\r\n")>]
+[<TestCase ("3 + 4 * 2 / (1 - 5)^2", Result = "3\r\n4\r\n2\r\n*\r\n1\r\n5\r\n-\r\n2\r\n^\r\n/\r\n+\r\n")>]
+[<TestCase ("1+2*4", Result = "1\r\n2\r\n4\r\n*\r\n+\r\n")>]
+[<TestCase ("3 ^ 1 ^ 2", Result = "3\r\n1\r\n2\r\n^\r\n^\r\n")>]
+[<TestCase ("(3 ^ 1) ^ 2", Result = "3\r\n1\r\n^\r\n2\r\n^\r\n")>]
+let ``Тесты на перевод выражения в польскую запись`` expr =
+  let input = "input.txt"
+  let output = "output.txt"
+  write input expr
+  postfix input output
+  (read(output))
 
 [<TestCase ("(-2) * 5", Result = "-10")>]
 [<TestCase ("1+999999", Result = "1000000")>]
@@ -152,12 +161,19 @@ let read2 =
 [<TestCase ("1+2*4", Result = "9")>]
 [<TestCase ("5-2+(4-1*4)^0", Result = "4")>]
 [<TestCase ("21 % 2 + 3 ^ 2 *(1 - 4)", Result = "-26")>]
-let ``Тесты`` expr =
-  write1(expr)
-  postfix()
-  write2(read1)
-  stackmachine()
-  (read2).TrimEnd('\r', '\n')
+[<TestCase ("3 ^ 1 ^ 2", Result = "3")>]
+[<TestCase ("(3 ^ 1) ^ 2", Result = "9")>]
+[<TestCase ("1 - 2 - 3", Result = "-4")>]
+[<TestCase ("1 - (2 - 3)", Result = "2")>]
+[<TestCase ("24 / 12", Result = "2")>]
+let ``Тесты на вычисление выражений`` expr =
+    let input = "input.txt"
+    let output = "output.txt"
+    write input expr
+    postfix input output
+    write input (read(output)) 
+    stackmachine input output
+    (read(output)).TrimEnd('\r', '\n')
 
   
 
