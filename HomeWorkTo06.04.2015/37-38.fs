@@ -30,9 +30,9 @@ type ListStack<'A> () =
           Some head
   end
 
-let postfix () =
-  use instream = new StreamReader("input.txt")
-  use outstream = new StreamWriter("output.txt")
+let postfix (input:string) (output:string) =
+  use instream = new StreamReader(input)
+  use outstream = new StreamWriter(output)
   let expr = instream.ReadToEnd()
   
   let mutable tokens = []
@@ -107,9 +107,9 @@ let (^) a b =
         temp <- temp*a
     temp
 
-let stackmachine () =
-   use instream = new StreamReader("output.txt")
-   use outstream = new StreamWriter("output2.txt")
+let stackmachine (input:string) (output:string) =
+   use instream = new StreamReader(input)
+   use outstream = new StreamWriter(output)
 
    let stack = new ListStack<int>():> Stack<int>
    while not instream.EndOfStream do
@@ -131,20 +131,13 @@ let stackmachine () =
 
    outstream.WriteLine(stack.pop.Value)
 
-let write1 (str : string) =
-    use stream = new StreamWriter("input.txt")
-    stream.WriteLine(str)
-
-let read1 =
-    use stream = new StreamReader("output.txt")
+let read (input:string) =
+    use stream = new StreamReader(input)
     stream.ReadToEnd()
 
-let write2 (str : string) = 
-    use stream = new StreamWriter("output.txt")
+let write (output:string) (str:string) = 
+    use stream = new StreamWriter(output)
     stream.WriteLine(str)
-let read2 =
-    use stream = new StreamReader("output2.txt")
-    stream.ReadToEnd()
 
 [<TestCase ("(-2) * 5", Result = "-10")>]
 [<TestCase ("1+999999", Result = "1000000")>]
@@ -153,11 +146,11 @@ let read2 =
 [<TestCase ("5-2+(4-1*4)^0", Result = "4")>]
 [<TestCase ("21 % 2 + 3 ^ 2 *(1 - 4)", Result = "-26")>]
 let ``Тесты`` expr =
-  write1(expr)
-  postfix()
-  write2(read1)
-  stackmachine()
-  (read2).TrimEnd('\r', '\n')
+  let input = "input.txt"
+  let output = "output.txt"
+  write input expr
+  postfix input output
+  (read(output)).TrimEnd('\r', '\n')
 
   
 
