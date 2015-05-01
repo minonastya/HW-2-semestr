@@ -1,7 +1,7 @@
 ﻿module Calculation
 
 open System
-
+//Реализация стека
 type Stack<'A> = 
   interface
     abstract push : 'A -> unit
@@ -47,32 +47,50 @@ type ListStack<'A> () =
       member s.rev = list <- List.rev list             
   end
 
+//Проверки на неправильный ввод
+let divByZero x y =
+  if y = 0 then failwith "Деление на ноль невозможно"
+  else x / y
+
+let checkBrackets x = 
+  if x <> 0 then failwith "Неправильно расставлены скобки" 
+
+let checkExpr x = 
+  if (x <> 0) && (x <> 1) then failwith "Неверный ввод выражения"
+
+//Перевод из постфиксной записи в инфиксную
 let postfix (expr: string) =
+  let mutable count = 0
+  let mutable bracks = 0
   let mutable tokens = []
   let mutable lexema = ""
   for i in 0..expr.Length - 1 do
     match expr.[i] with
-    |'-' -> if expr.[i-1] = '(' then lexema <- "-"
+    |'-' -> if (i = 0) then lexema <- "-"
+            elif expr.[i-1] = '(' then lexema <- "-"
             else 
               if System.Char.IsDigit(expr.[i-1]) then 
                    tokens <- List.append tokens [lexema]
                    lexema <- ""
-              tokens <- List.append tokens ["-"]
-    |'(' -> tokens <- List.append tokens ["("]
+                   count <- count + 1
+              tokens <- List.append tokens ["-"]; count <- count - 1
+    |'(' -> tokens <- List.append tokens ["("]; bracks <- bracks + 1
     |')' -> tokens <- List.append tokens [lexema]
+            if lexema <> "" then count <- count + 1
             lexema <- ""
             tokens <- List.append tokens [")"]
-    |' ' -> if System.Char.IsDigit(expr.[i-1]) then
-              tokens <- List.append tokens [lexema]
-              lexema <- ""
+            bracks <- bracks - 1
     | _ -> if System.Char.IsDigit(expr.[i]) then lexema <- lexema + expr.[i].ToString()
            else 
              if (lexema <> "")&&(System.Char.IsDigit(expr.[i-1])) then 
                   tokens <- List.append tokens [lexema]
                   lexema <- ""
-             tokens <- List.append tokens [expr.[i].ToString()]
-                
-  if lexema.Length <> 0 then tokens <- List.append tokens [lexema]
+                  count <- count + 1
+             tokens <- List.append tokens [expr.[i].ToString()]; count <- count - 1
+    checkExpr count                
+  if lexema.Length <> 0 then tokens <- List.append tokens [lexema]; count <- count + 1
+  if count <> 1 then failwith "Неверный ввод выражения"
+  checkBrackets bracks 
 
 
   let prior op = 
@@ -122,11 +140,7 @@ let postfix (expr: string) =
   f tokens
   stackOut
 
-
-let divByZero x y =
-  if y = 0 then failwith "Деление на ноль невозможно"
-  else x / y
-
+//Вычисление значения выражения в инфиксной записи
 let stackmachine (expr: string) =
   let stackOut = new ListStack<string>():> Stack<string>
   let stackVal = new ListStack<int>():> Stack<int>
@@ -155,6 +169,6 @@ let stackmachine (expr: string) =
 
 let check ex =
   try 
-    stackmachine ex
+    (stackmachine ex).ToString()
   with
-  |Failure msg -> printfn "%s" msg; 0
+  | Failure msg -> msg
