@@ -1,0 +1,37 @@
+Результаты сравнения многопоточных запусков
+
+Threads: 1	 Size: 10	 Time: 00:00:00.0006213
+Threads: 1	 Size: 100	 Time: 00:00:00.0006478
+Threads: 1	 Size: 1000	 Time: 00:00:00.0017643
+Threads: 1	 Size: 10000	 Time: 00:00:00.0103280
+Threads: 1	 Size: 100000	 Time: 00:00:00.0749071
+Threads: 1	 Size: 1000000	 Time: 00:00:00.7324866
+Threads: 1	 Size: 10000000	 Time: 00:00:07.3104345
+Threads: 1       Size: 100000000 Time: 00:01:11.3842063
+
+Threads: 2	 Size: 10	 Time: 00:00:00.0045298
+Threads: 2	 Size: 100	 Time: 00:00:00.0009164
+Threads: 2	 Size: 1000	 Time: 00:00:00.0016125
+Threads: 2	 Size: 10000	 Time: 00:00:00.0079807
+Threads: 2	 Size: 100000	 Time: 00:00:00.0556357
+Threads: 2	 Size: 1000000	 Time: 00:00:00.4272378
+Threads: 2	 Size: 10000000	 Time: 00:00:03.5301796
+Threads: 2	 Size: 100000000 Time: 00:00:25.8460459
+
+Threads: 4	 Size: 10	 Time: 00:00:00.0014047
+Threads: 4	 Size: 100	 Time: 00:00:00.0015826
+Threads: 4	 Size: 1000	 Time: 00:00:00.0018913
+Threads: 4	 Size: 10000	 Time: 00:00:00.0075971
+Threads: 4	 Size: 100000	 Time: 00:00:00.0543644
+Threads: 4	 Size: 1000000	 Time: 00:00:00.5012413
+Threads: 4	 Size: 10000000	 Time: 00:00:02.9353370
+Threads: 4	 Size: 100000000 Time: 00:00:20.3135981
+
+Threads: 8	 Size: 10	 Time: 00:00:00.0028522
+Threads: 8	 Size: 100	 Time: 00:00:00.0025375
+Threads: 8	 Size: 1000	 Time: 00:00:00.0026016
+Threads: 8	 Size: 10000	 Time: 00:00:00.0072863
+Threads: 8	 Size: 100000	 Time: 00:00:00.0853463
+Threads: 8	 Size: 1000000	 Time: 00:00:00.4659062
+Threads: 8	 Size: 10000000	 Time: 00:00:02.9359844
+Threads: 8	 Size: 100000000 Time: 00:00:21.8875294
